@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/hover.css">
-  <script>document.documentElement.classList.add('js');</script>
+  <script>(function (r) { r.classList.add('js'); var seen = false; try { seen = sessionStorage.getItem('introSeen') === '1'; } catch (e) {} if (!seen) r.classList.add('intro-on'); })(document.documentElement);</script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -29,6 +29,12 @@
   </script>
 </head>
 <body>
+  <!-- Entrance: initials, then the page. Shown once per visit (see main.js). -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro__mark"><span class="intro__l">J</span><span class="intro__l">C</span></div>
+    <span class="intro__bar"></span>
+  </div>
+
   <a class="skip" href="#main">Skip to content</a>
 
   <!-- ============ HERO ============ -->

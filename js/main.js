@@ -4,8 +4,23 @@
   // Hero load sequence: start once fonts are ready (or after 600 ms at most), so text never jumps.
   var root = document.documentElement;
   var go = function () { requestAnimationFrame(function () { root.classList.add('is-ready'); document.dispatchEvent(new Event('portfolio:ready')); setTimeout(function () { root.classList.add('is-settled'); }, 2600); }); };
+  // Entrance: the initials appear, then the cover slides up and the hero sequence starts underneath.
+  // Shown once per browser tab session; the head script only adds .intro-on when it has not been seen yet.
+  var intro = document.querySelector('.intro');
+  var runIntro = function (next) {
+    if (!intro || !root.classList.contains('intro-on')) { if (intro) { intro.remove(); } next(); return; }
+    try { sessionStorage.setItem('introSeen', '1'); } catch (e) {}
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    intro.classList.add('is-playing');
+    setTimeout(function () {
+      intro.classList.add('is-leaving');
+      next();
+      setTimeout(function () { intro.remove(); root.classList.remove('intro-on'); }, reduce ? 350 : 1000);
+    }, reduce ? 600 : 1500);
+  };
+
   var started = false;
-  var start = function () { if (!started) { started = true; go(); } };
+  var start = function () { if (!started) { started = true; runIntro(go); } };
   if (document.fonts && document.fonts.ready) { document.fonts.ready.then(start); setTimeout(start, 600); } else { start(); }
 
   // Copy email
