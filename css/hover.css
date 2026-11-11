@@ -1,0 +1,85 @@
+/* ==========================================================================
+   Hover animations (optional layer)
+   To switch them all off: delete the <link rel="stylesheet" href="css/hover.css"> line in index.html.
+   Rules of this file:
+   - only for devices with a real pointer (touch screens never get a stuck "hover" state)
+   - only transform and opacity, so nothing re-flows the layout and it stays smooth
+   - only the parts a visitor can click or read as a unit; text paragraphs stay still
+   - same easing and 150 to 350 ms timings everywhere; disabled when "reduce motion" is on
+   ========================================================================== */
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+
+  :root {
+    --hv-ease: cubic-bezier(0.16, 1, 0.3, 1);   /* fast start, soft landing */
+    --hv-fast: 180ms;
+    --hv-med: 320ms;
+  }
+
+  /* ---- Pills: the dark and outline buttons lift a little, the arrow icons move ---- */
+  .pill { transition: background-color 180ms ease, color 180ms ease, transform var(--hv-med) var(--hv-ease), box-shadow var(--hv-med) var(--hv-ease); }
+  .pill--dark:hover, .pill--outline:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -12px rgba(27, 27, 26, 0.55); }
+  .pill--white:hover { transform: translateY(-1px); }
+  .pill:active { transform: scale(0.97); box-shadow: none; transition-duration: 90ms; }
+  .pill__icon { transition: transform var(--hv-med) var(--hv-ease); }
+  .pill:hover .pill__icon:not(.pill__icon--down):not(.pill__icon--lead) { transform: translate(2px, -2px); }
+  .pill--dark:hover .pill__icon--lead { transform: rotate(-8deg) scale(1.08); }
+
+  /* The hero pieces have slow entrance transitions (with delays). main.js adds .is-settled once they are done;
+     from then on they get the normal, immediate hover timings. */
+  .is-settled .hero .pill--dark { transition: background-color 180ms ease, color 180ms ease, transform var(--hv-med) var(--hv-ease), box-shadow var(--hv-med) var(--hv-ease), opacity 200ms ease; }
+  .is-settled .hero .pill--dark:hover { transform: translateY(-2px); }   /* beats the entrance rule that sets transform: none */
+  .is-settled .hero .pill--dark:active { transform: scale(0.97); }
+  .is-settled .hero .hero__sub { transition: none; }
+  .is-settled .hero-anim--avatar .chip { transition: transform 380ms var(--hv-ease); }
+
+  /* ---- Portrait: a slight pop, and the tag swings a little ---- */
+  .avatar__img, .avatar__mono { transition: transform var(--hv-med) var(--hv-ease); }
+  .avatar:hover .avatar__img, .avatar:hover .avatar__mono { transform: scale(1.04); }
+  .is-settled .avatar:hover .chip { transform: rotate(-6deg) translateY(-2px); }
+
+  /* ---- Logo strip: the logo under the pointer gets sharper, the others step back ---- */
+  .marquee.is-marquee .mark { transition: opacity var(--hv-fast) ease, transform var(--hv-med) var(--hv-ease); }
+  .marquee.is-marquee .marks:hover .mark { opacity: 0.42; }
+  .marquee.is-marquee .marks .mark:hover { opacity: 1; transform: translateY(-2px) scale(1.06); }
+
+  /* ---- Four areas: card-less, so the icon does the talking ---- */
+  .area__icon { transition: transform var(--hv-med) var(--hv-ease); transform-origin: 50% 70%; }
+  .area:hover .area__icon { transform: translateY(-3px) rotate(-6deg) scale(1.08); }
+
+  /* ---- Video: lifts, and the shadow settles lower ---- */
+  .feature__media { transition: transform 480ms var(--hv-ease), box-shadow 480ms var(--hv-ease); }
+  .feature__media:hover { transform: translateY(-4px); box-shadow: 0 40px 70px -34px rgba(27, 27, 26, 0.5); }
+  .tags li { transition: background-color var(--hv-fast) ease, color var(--hv-fast) ease, transform var(--hv-med) var(--hv-ease); }
+  .tags li:hover { background: var(--ink); color: #fff; transform: translateY(-1px); }
+
+  /* ---- Rows (projects, how I think), steps (experience, education), list items: the title slides over,
+          and a thin line grows under the row. Texts keep still. ---- */
+  .row, .step, .list li { position: relative; }
+  .row::after, .step::after, .list li::after {
+    content: ""; position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%;
+    background: var(--ink); transform: scaleX(0); transform-origin: left center;
+    transition: transform 520ms var(--hv-ease);
+  }
+  .row:hover::after, .step:hover::after, .list li:hover::after { transform: scaleX(1); }
+  .row__title, .step__what { transition: transform var(--hv-med) var(--hv-ease); }
+  .row:hover .row__title, .step:hover .step__what { transform: translateX(6px); }
+  .step__when { transition: color var(--hv-fast) ease; }
+  .step:hover .step__when { color: var(--ink); }
+
+  /* ---- Links: an ink underline draws from the left. In the certificate list a pale line is already there. ---- */
+  .list a, .nav__right a, .foot a {
+    text-decoration: none;
+    background-image: linear-gradient(currentColor, currentColor), linear-gradient(var(--line), var(--line));
+    background-position: 0 100%, 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0 1px, 0 1px;
+    transition: background-size 320ms var(--hv-ease), color var(--hv-fast) ease;
+  }
+  .list a { background-size: 0 1px, 100% 1px; }
+  .list a:hover, .nav__right a:hover, .foot a:hover { background-size: 100% 1px, 100% 1px; }
+
+  /* ---- Contact icon: a small tilt ---- */
+  .cta__icon { transition: transform var(--hv-med) var(--hv-ease), background-color var(--hv-fast) ease; }
+  .cta__icon:hover { transform: rotate(-8deg) scale(1.06); background: var(--white); }
+}
